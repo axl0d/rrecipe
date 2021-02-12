@@ -6,13 +6,12 @@ part 'ingredient.g.dart';
 class Ingredient {
   final String image;
   final String name;
+  final String imageUrl;
 
   const Ingredient({
     this.image,
     this.name,
-  });
-
-  String get imageUrl => ingredientImageUrl + image;
+  }) : imageUrl = ingredientImageUrl + image;
 
   factory Ingredient.fromJson(Map<String, dynamic> json) =>
       _$IngredientFromJson(json);

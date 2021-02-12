@@ -33,8 +33,15 @@ class Recipe {
     this.ingredients,
   });
 
+  List<String> get instructionList =>
+      instructions.split(exp).where((i) => i.isNotEmpty).toList();
+
+  String get cleanedSummary => summary.replaceAll(exp, '');
+
   factory Recipe.fromJson(Map<String, dynamic> json) => _$RecipeFromJson(json);
 }
+
+final exp = RegExp(r'<[^>]*>', multiLine: true, caseSensitive: true);
 
 @JsonLiteral('recipe.json', asConst: true)
 Map get recipeDump => _$recipeDumpJsonLiteral;
