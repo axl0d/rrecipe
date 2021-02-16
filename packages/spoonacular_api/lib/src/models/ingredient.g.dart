@@ -9,7 +9,8 @@ part of 'ingredient.dart';
 Ingredient _$IngredientFromJson(Map<String, dynamic> json) {
   return $checkedNew('Ingredient', json, () {
     final val = Ingredient(
-      image: $checkedConvert(json, 'image', (v) => v as String),
+      image: $checkedConvert(
+          json, 'image', (v) => Ingredient._imagePath(v as String)),
       name: $checkedConvert(json, 'name', (v) => v as String),
     );
     return val;

@@ -4,14 +4,16 @@ part 'ingredient.g.dart';
 
 @JsonSerializable(checked: true, createToJson: false)
 class Ingredient {
+  @JsonKey(fromJson: _imagePath)
   final String image;
   final String name;
-  final String imageUrl;
 
   const Ingredient({
     this.image,
     this.name,
-  }) : imageUrl = ingredientImageUrl + image;
+  });
+
+  static String _imagePath(String image) => '$ingredientImageUrl$image';
 
   factory Ingredient.fromJson(Map<String, dynamic> json) =>
       _$IngredientFromJson(json);

@@ -27,7 +27,7 @@ class RecipeRepository {
                   .map(
                     (i) => Ingredient(
                       name: i.name,
-                      imageUrl: i.imageUrl,
+                      imageUrl: i.image,
                     ),
                   )
                   .toList(),
@@ -52,7 +52,7 @@ class RecipeRepository {
           .map(
             (i) => Ingredient(
               name: i.name,
-              imageUrl: i.imageUrl,
+              imageUrl: i.image,
             ),
           )
           .toList(),
