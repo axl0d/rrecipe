@@ -1,6 +1,12 @@
 # rrecipes
 
-A recipes random application made with Flutter .
+A random recipes application made with Flutter.
+
+To test dont forget replace with your api key into `packages/spoonacular_api/lib/src/spoonacular_api_client.dart`
+
+```dart
+const apiKey = 'YOUR APIKEY HERE';
+```
 
 ## Getting Started
 
