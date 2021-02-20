@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc:
+  google_fonts:
   recipe_repository:
     path: packages/recipe_repository
 

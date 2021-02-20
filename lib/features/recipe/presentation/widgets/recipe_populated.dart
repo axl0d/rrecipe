@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_repository/recipe_repository.dart';
+import 'package:rrecipes/features/recipe/presentation/pages/detail.dart';
 
 class RecipePopulated extends StatelessWidget {
   final List<Recipe> recipes;
@@ -24,14 +25,24 @@ class _RecipeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 338,
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
+      child: InkWell(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => DetailRecipePage(
+              id: recipe.id,
+            ),
+          ),
         ),
-        margin: const EdgeInsets.all(8),
-        child: _RecipeCardContent(
-          recipe: recipe,
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+          ),
+          margin: const EdgeInsets.all(8),
+          child: _RecipeCardContent(
+            recipe: recipe,
+          ),
         ),
       ),
     );
@@ -48,7 +59,14 @@ class _RecipeCardContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        RecipeImage(image: recipe.image),
+        SizedBox(
+          height: 184,
+          width: MediaQuery.of(context).size.width,
+          child: RecipeImage(
+            image: recipe.image,
+            boxFit: BoxFit.cover,
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.all(8),
           child: Column(
@@ -78,9 +96,13 @@ class RecipeIcons extends StatelessWidget {
   final int readyInMinutes, likes, servings;
   final bool isCheap;
 
-  const RecipeIcons(
-      {Key key, this.readyInMinutes, this.likes, this.servings, this.isCheap})
-      : super(key: key);
+  const RecipeIcons({
+    Key key,
+    this.readyInMinutes,
+    this.likes,
+    this.servings,
+    this.isCheap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +113,7 @@ class RecipeIcons extends StatelessWidget {
         children: [
           Column(
             children: [
-              Icon(
+              const Icon(
                 Icons.alarm,
                 color: Colors.red,
               ),
@@ -100,7 +122,7 @@ class RecipeIcons extends StatelessWidget {
           ),
           Column(
             children: [
-              Icon(
+              const Icon(
                 Icons.thumb_up,
                 color: Colors.blue,
               ),
@@ -109,7 +131,7 @@ class RecipeIcons extends StatelessWidget {
           ),
           Column(
             children: [
-              Icon(
+              const Icon(
                 Icons.local_pizza,
                 color: Colors.green,
               ),
@@ -119,7 +141,7 @@ class RecipeIcons extends StatelessWidget {
           if (isCheap)
             Column(
               children: [
-                Icon(Icons.attach_money),
+                const Icon(Icons.attach_money),
                 Text('cheap'),
               ],
             ),
@@ -131,32 +153,34 @@ class RecipeIcons extends StatelessWidget {
 
 class RecipeImage extends StatelessWidget {
   final String image;
+  final BoxFit boxFit;
 
-  const RecipeImage({Key key, this.image}) : super(key: key);
+  const RecipeImage({Key key, this.image, this.boxFit}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 184,
-      width: MediaQuery.of(context).size.width,
-      child: Image.network(
-        image,
-        fit: BoxFit.cover,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          if (loadingProgress != null &&
-              loadingProgress.cumulativeBytesLoaded <
-                  loadingProgress.expectedTotalBytes) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (loadingProgress.cumulativeBytesLoaded ==
-              loadingProgress.expectedTotalBytes) {
-            return child;
-          }
+    final width = MediaQuery.of(context).size.width;
+    return Image.network(
+      image,
+      fit: boxFit,
+      width: width,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        if (loadingProgress != null &&
+            loadingProgress.cumulativeBytesLoaded <
+                loadingProgress.expectedTotalBytes) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (loadingProgress.cumulativeBytesLoaded ==
+            loadingProgress.expectedTotalBytes) {
           return child;
-        },
-        errorBuilder: (context, error, stackTrace) => Icon(Icons.broken_image),
+        }
+        return child;
+      },
+      errorBuilder: (context, error, stackTrace) => SizedBox(
+        width: width,
+        child: Icon(Icons.broken_image),
       ),
     );
   }
