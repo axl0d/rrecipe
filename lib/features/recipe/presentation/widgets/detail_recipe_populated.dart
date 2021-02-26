@@ -117,7 +117,7 @@ class _DetailRecipeImage extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.all(Radius.circular(30)),
-          child: RecipeImage(
+          child: RecipeImageFitted(
             image: image,
           ),
         ),
@@ -158,9 +158,13 @@ class _IngredientList extends StatelessWidget {
   const _IngredientList({Key key, this.ingredients}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 180,
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        minHeight: 150,
+        maxHeight: 200,
+      ),
       child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
         itemCount: ingredients.length,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) =>
@@ -179,7 +183,7 @@ class _IngredientItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        width: 100,
+        width: MediaQuery.of(context).size.width * 0.25,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,

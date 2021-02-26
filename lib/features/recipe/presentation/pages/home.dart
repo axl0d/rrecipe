@@ -26,7 +26,10 @@ class HomeView extends StatelessWidget {
         builder: (context, state) {
           switch (state.status) {
             case RecipeStatus.success:
-              return RecipePopulated(recipes: state.recipes);
+              return RecipePopulated(
+                recipes: state.recipes,
+                onRefresh: () => context.read<RecipeCubit>().fetchRecipes(),
+              );
             case RecipeStatus.failure:
             case RecipeStatus.loading:
             default:

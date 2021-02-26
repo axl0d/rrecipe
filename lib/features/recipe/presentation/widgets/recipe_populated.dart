@@ -4,14 +4,19 @@ import 'package:rrecipes/features/recipe/presentation/pages/detail.dart';
 
 class RecipePopulated extends StatelessWidget {
   final List<Recipe> recipes;
+  final ValueGetter<Future<void>> onRefresh;
 
-  const RecipePopulated({Key key, this.recipes}) : super(key: key);
+  const RecipePopulated({Key key, this.recipes, this.onRefresh})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: recipes.length,
-      itemBuilder: (context, index) => _RecipeCard(recipe: recipes[index]),
+    return RefreshIndicator(
+      onRefresh: onRefresh,
+      child: ListView.builder(
+        itemCount: recipes.length,
+        itemBuilder: (context, index) => _RecipeCard(recipe: recipes[index]),
+      ),
     );
   }
 }
@@ -23,26 +28,23 @@ class _RecipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 338,
-      child: InkWell(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => DetailRecipePage(
-              id: recipe.id,
-            ),
+    return InkWell(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => DetailRecipePage(
+            id: recipe.id,
           ),
         ),
-        child: Card(
-          clipBehavior: Clip.antiAlias,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-          ),
-          margin: const EdgeInsets.all(8),
-          child: _RecipeCardContent(
-            recipe: recipe,
-          ),
+      ),
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+        ),
+        margin: const EdgeInsets.all(8),
+        child: _RecipeCardContent(
+          recipe: recipe,
         ),
       ),
     );
@@ -59,13 +61,8 @@ class _RecipeCardContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          height: 184,
-          width: MediaQuery.of(context).size.width,
-          child: RecipeImage(
-            image: recipe.image,
-            boxFit: BoxFit.cover,
-          ),
+        RecipeImageFitted(
+          image: recipe.image,
         ),
         Padding(
           padding: const EdgeInsets.all(8),
@@ -88,6 +85,21 @@ class _RecipeCardContent extends StatelessWidget {
           ),
         )
       ],
+    );
+  }
+}
+
+class RecipeImageFitted extends StatelessWidget {
+  final String image;
+
+  const RecipeImageFitted({Key key, this.image}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return ConstrainedBox(
+      constraints: BoxConstraints(minHeight: 250),
+      child: RecipeImage(
+        image: image,
+      ),
     );
   }
 }
@@ -152,18 +164,21 @@ class RecipeIcons extends StatelessWidget {
 }
 
 class RecipeImage extends StatelessWidget {
+  const RecipeImage({
+    Key key,
+    @required this.image,
+    this.boxFit = BoxFit.cover,
+  }) : super(key: key);
+
   final String image;
   final BoxFit boxFit;
 
-  const RecipeImage({Key key, this.image, this.boxFit}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
     return Image.network(
-      image,
+      image ?? '',
+      width: double.infinity,
       fit: boxFit,
-      width: width,
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) return child;
         if (loadingProgress != null &&
@@ -178,9 +193,18 @@ class RecipeImage extends StatelessWidget {
         }
         return child;
       },
-      errorBuilder: (context, error, stackTrace) => SizedBox(
-        width: width,
-        child: Icon(Icons.broken_image),
+      errorBuilder: (context, error, stackTrace) => const ErrorImage(),
+    );
+  }
+}
+
+class ErrorImage extends StatelessWidget {
+  const ErrorImage();
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Icon(
+        Icons.broken_image,
       ),
     );
   }
