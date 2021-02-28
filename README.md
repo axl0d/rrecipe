@@ -1,8 +1,12 @@
 # rrecipes
 
-A random recipes application made with Flutter.
+A random recipes application made with :blue_heart: Flutter.
 
-To test dont forget replace with your api key into `packages/spoonacular_api/lib/src/spoonacular_api_client.dart`
+Swipe down to refresh recipes :yum::arrow_down::cake: 
+
+![demo](./screenshot/rrecipe.gif)
+
+> To test dont forget replace with your api key into `packages/spoonacular_api/lib/src/spoonacular_api_client.dart`
 
 ```dart
 const apiKey = 'YOUR APIKEY HERE';
