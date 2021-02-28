@@ -38,6 +38,13 @@ class RecipeAppView extends StatelessWidget {
 }
 
 final recipeTextTheme = GoogleFonts.latoTextTheme().copyWith(
+  headline2: GoogleFonts.lato(
+    color: Colors.black,
+    fontWeight: FontWeight.bold,
+  ),
+  headline3: GoogleFonts.lato(
+    color: Colors.grey.shade600,
+  ),
   headline4: GoogleFonts.lato(
     color: Colors.grey.shade800,
     fontWeight: FontWeight.w600,

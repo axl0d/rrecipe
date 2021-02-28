@@ -13,10 +13,104 @@ class RecipePopulated extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: onRefresh,
-      child: ListView.builder(
-        itemCount: recipes.length,
-        itemBuilder: (context, index) => _RecipeCard(recipe: recipes[index]),
+      child: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            flexibleSpace: FlexibleSpaceBar(
+              background: _SliverAppBarContent(),
+              collapseMode: CollapseMode.pin,
+            ),
+            expandedHeight: MediaQuery.of(context).size.height * 0.4,
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => _RecipeCard(
+                recipe: recipes[index],
+              ),
+              childCount: 5,
+            ),
+          ),
+        ],
       ),
+    );
+  }
+}
+
+class _SliverAppBarContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          bottom: 0,
+          right: -100,
+          top: -150,
+          child: Container(
+            width: 350,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [
+                  Colors.green,
+                  Colors.greenAccent,
+                  Colors.grey,
+                ],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey,
+                  offset: Offset(4.0, 4.0),
+                  blurRadius: 10.0,
+                )
+              ],
+            ),
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.restaurant,
+                      size: 50,
+                    ),
+                    Card(
+                      color: Colors.grey.shade600,
+                      child: const SizedBox(
+                        height: 8,
+                        width: 50,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Discover ',
+                    style: Theme.of(context).textTheme.headline2,
+                  ),
+                  Text(
+                    'New Recipes',
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                ],
+              ),
+            )
+          ],
+        )
+      ],
     );
   }
 }
