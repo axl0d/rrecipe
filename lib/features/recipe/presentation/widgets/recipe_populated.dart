@@ -275,17 +275,14 @@ class RecipeImage extends StatelessWidget {
       fit: boxFit,
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) return child;
-        if (loadingProgress != null &&
-            loadingProgress.cumulativeBytesLoaded <
-                loadingProgress.expectedTotalBytes) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (loadingProgress.cumulativeBytesLoaded ==
-            loadingProgress.expectedTotalBytes) {
-          return child;
-        }
-        return child;
+        return Center(
+          child: CircularProgressIndicator(
+            value: loadingProgress.expectedTotalBytes != null
+                ? loadingProgress.cumulativeBytesLoaded /
+                    loadingProgress.expectedTotalBytes
+                : null,
+          ),
+        );
       },
       errorBuilder: (context, error, stackTrace) => const ErrorImage(),
     );
